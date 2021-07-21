@@ -1,0 +1,23 @@
+
+
+HTTP STREAMING 
+
+goals:
+	--* ONE FULL EPISODE OF THE OFFICE WITHOUT BUFFERING *--
+
+	- spring boot server streaming .mp4 files.
+	- client to receive and play videos.
+	- file system integration.
+
+
+stretch: 
+	- DropBox integration.
+	- Raspberry Pi installer.
+	- ANY plex functionality.
+
+
+finished:
+
+	- project setup with spring-boot web packages.
+	- read in large files 
+
