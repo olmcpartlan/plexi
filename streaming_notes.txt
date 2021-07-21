@@ -7,7 +7,9 @@ goals:
 
 	- spring boot server streaming .mp4 files.
 	- client to receive and play videos.
-	- file system integration.
+	- file system integration (preferably from chives/lydia).
+  - Page to upload files from URL (youtube specifically).
+  - client lol.
 
 
 stretch: 
@@ -19,5 +21,6 @@ stretch:
 finished:
 
 	- project setup with spring-boot web packages.
-	- read in large files 
+	- read in large files.
+  - STREAMING VIDEO!!
 

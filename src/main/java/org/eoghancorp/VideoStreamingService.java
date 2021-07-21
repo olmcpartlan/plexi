@@ -16,42 +16,57 @@ import static java.lang.Math.min;
 
 @Service
 public class VideoStreamingService {
-    private ResourceLoader loader;
-    private static final long CHUNK_SIZE = 1000000L;
+    private static final long chunk_size = 1000000L;
     public ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader , String directory) throws IOException {
-        // Resource videoResource = new Resource(directory + "/taskmaster.mp4");
-        Resource videoResource = new FileSystemResource(directory + "/taskmaster.mp4");
-        ResourceRegion resourceRegion = getResourceRegion(videoResource, rangeHeader);
 
+        // Read the desired file into memory as a resource.
+        // This will have to be provided by url query parameters or request body.
+        Resource fileSystemResource = new FileSystemResource(directory + "/livepd.mp4");
+
+        // Find the requested region WITHIN the video resource.
+        ResourceRegion resourceRegion = getResourceRegion(fileSystemResource, rangeHeader);
+
+        // Specify that this a partial response.
         return ResponseEntity.status(HttpStatus.PARTIAL_CONTENT)
-                .contentType(MediaTypeFactory.getMediaType(videoResource).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                // Set content type.
+                .contentType(MediaTypeFactory.getMediaType(fileSystemResource).orElse(MediaType.APPLICATION_OCTET_STREAM))
+                // Attach the requested region.
                 .body(resourceRegion);
     }
 
     private ResourceRegion getResourceRegion(Resource video, String httpHeaders) throws IOException {
         ResourceRegion resourceRegion = null;
 
+        // Find the length (size) of the video.
         long contentLength = video.contentLength();
-        int fromRange = 0;
-        int toRange = 0;
+        int from = 0;
+        int to = 0;
         if (StringUtils.isNotBlank(httpHeaders)) {
+            // This is coming from the initial request.
+            // The headers will contain the amount and position of the data required.
             String[] ranges = httpHeaders.substring("bytes=".length()).split("-");
-            fromRange = Integer.valueOf(ranges[0]);
+            from = Integer.valueOf(ranges[0]);
+
+            // If there ARE specified bytes     - extract from the file object.
             if (ranges.length > 1) {
-                toRange = Integer.valueOf(ranges[1]);
-            } else {
-                toRange = (int) (contentLength - 1);
+                to = Integer.valueOf(ranges[1]);
+            }
+            // If there AREN'T specified bytes  - send the whole thing
+            else {
+                to = (int) (contentLength - 1);
             }
         }
 
-        if (fromRange > 0) {
-            long rangeLength = min(CHUNK_SIZE, toRange - fromRange + 1);
-            resourceRegion = new ResourceRegion(video, fromRange, rangeLength);
+        if (from > 0) {
+            // Find out where the actual chunk position is and set it to the return.
+            long rangeLength = min(chunk_size, to - from + 1);
+            resourceRegion = new ResourceRegion(video, from, rangeLength);
         } else {
-            long rangeLength = min(CHUNK_SIZE, contentLength);
+            long rangeLength = min(chunk_size, contentLength);
             resourceRegion = new ResourceRegion(video, 0, rangeLength);
         }
 
+        // Send the region!
         return resourceRegion;
     }
 }

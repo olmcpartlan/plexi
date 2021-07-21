@@ -1,5 +1,7 @@
-package org.eoghancorp;
+package org.eoghancorp.Controllers;
 
+import org.eoghancorp.ReadFile;
+import org.eoghancorp.VideoStreamingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.support.ResourceRegion;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,8 @@ public class MediaController {
 
     VideoStreamingService service = new VideoStreamingService();
 
-    private String videoPath = "/Users/owenmcpartlan/boost_lib/plex/videos/taskmaster.mp4";
-    private String videoDir = "/Users/owenmcpartlan/boost_lib/plex/videos";
+    private String videoPath    = "/Users/omcpartlan/boost_lib/plex/videos/taskmaster.mp4";
+    private String videoDir     = "/Users/omcpartlan/boost_lib/plex/videos";
 
     @GetMapping
     public String index() {
