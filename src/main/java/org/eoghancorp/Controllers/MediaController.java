@@ -16,18 +16,17 @@ public class MediaController {
 
     VideoStreamingService service = new VideoStreamingService();
 
-    private String videoPath    = "/Users/omcpartlan/boost_lib/plex/videos/taskmaster.mp4";
-    private String videoDir     = "/Users/omcpartlan/boost_lib/plex/videos";
+    // private String videoPath    = "/Users/owenmcpartlan/boost_lib/plex/videos/taskmaster.mp4";
+    private String videoDir     = "/Users/owenmcpartlan/boost_lib/plex/";
 
     @GetMapping
     public String index() {
-        new ReadFile().readFileFromPath(videoPath);
         return "index route";
     }
 
     @GetMapping(value = "/video", produces = "application/octet-stream")
-    public ResponseEntity<ResourceRegion> serveVideo(@RequestHeader(value = "Range", required = false) String rangeHeader) throws IOException {
-        return service.getVideoRegion(rangeHeader, videoDir);
+    public ResponseEntity<ResourceRegion> serveVideo(@RequestHeader(value = "Range", required = false) String rangeHeader, @RequestParam String fileName ) throws IOException {
+        return service.getVideoRegion(rangeHeader, videoDir, fileName);
     }
 
 }

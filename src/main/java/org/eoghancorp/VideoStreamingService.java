@@ -17,11 +17,11 @@ import static java.lang.Math.min;
 @Service
 public class VideoStreamingService {
     private static final long chunk_size = 1000000L;
-    public ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader , String directory) throws IOException {
+    public ResponseEntity<ResourceRegion> getVideoRegion(String rangeHeader , String directory, String fileName) throws IOException {
 
         // Read the desired file into memory as a resource.
         // This will have to be provided by url query parameters or request body.
-        Resource fileSystemResource = new FileSystemResource(directory + "/livepd.mp4");
+        Resource fileSystemResource = new FileSystemResource(directory + "/" + fileName);
 
         // Find the requested region WITHIN the video resource.
         ResourceRegion resourceRegion = getResourceRegion(fileSystemResource, rangeHeader);
